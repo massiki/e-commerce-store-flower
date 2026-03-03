@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+@layer base {
+    body {
+        font-family: 'Poppins', sans-serif;
+    }
+}
+
+@layer components {
+    /* Pink Gradient Button */
+    .btn-pink {
+        @apply inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-pink-500 to-rose-400 text-white font-semibold rounded-xl shadow-lg hover:from-pink-600 hover:to-rose-500 transform hover:scale-105 transition-all duration-300 ease-in-out;
+    }
+
+    .btn-pink-outline {
+        @apply inline-flex items-center justify-center px-6 py-3 border-2 border-pink-500 text-pink-500 font-semibold rounded-xl hover:bg-pink-500 hover:text-white transform hover:scale-105 transition-all duration-300 ease-in-out;
+    }
+
+    .btn-pink-sm {
+        @apply inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-pink-500 to-rose-400 text-white text-sm font-medium rounded-lg shadow hover:from-pink-600 hover:to-rose-500 transform hover:scale-105 transition-all duration-300;
+    }
+
+    /* Product Card */
+    .card-product {
+        @apply bg-white rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 overflow-hidden;
+    }
+
+    /* Section Title */
+    .section-title {
+        @apply text-3xl md:text-4xl font-bold text-gray-800 text-center;
+    }
+
+    .section-subtitle {
+        @apply text-gray-500 text-center mt-3 max-w-2xl mx-auto;
+    }
+
+    /* Badge */
+    .badge-new {
+        @apply absolute top-3 left-3 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full;
+    }
+
+    .badge-bestseller {
+        @apply absolute top-3 left-3 bg-gradient-to-r from-pink-500 to-rose-400 text-white text-xs font-bold px-3 py-1 rounded-full;
+    }
+
+    /* Input styling */
+    .input-pink {
+        @apply w-full rounded-xl border-gray-300 focus:border-pink-500 focus:ring-pink-500 transition-all duration-200;
+    }
+
+    /* Admin Sidebar */
+    .sidebar-link {
+        @apply flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-pink-50 hover:text-pink-600 transition-all duration-200;
+    }
+
+    .sidebar-link-active {
+        @apply flex items-center gap-3 px-4 py-3 rounded-xl bg-pink-50 text-pink-600 font-medium;
+    }
+}
