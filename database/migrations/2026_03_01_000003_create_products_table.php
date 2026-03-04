@@ -17,7 +17,6 @@ return new class extends Migration
             $table->decimal('price', 12, 2);
             $table->integer('stock')->default(0);
             $table->string('image')->nullable();
-            $table->json('images')->nullable();
             $table->string('badge')->nullable(); // best_seller, new
             $table->boolean('is_featured')->default(false);
             $table->decimal('rating', 2, 1)->default(0);

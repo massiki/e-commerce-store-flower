@@ -14,26 +14,18 @@ class CategorySeeder extends Seeder
             [
                 'name' => 'Bunga Ulang Tahun',
                 'slug' => 'bunga-ulang-tahun',
-                'description' => 'Koleksi bunga cantik untuk merayakan hari ulang tahun orang tersayang.',
-                'image' => 'categories/birthday.jpg',
             ],
             [
                 'name' => 'Bunga Wisuda',
                 'slug' => 'bunga-wisuda',
-                'description' => 'Rangkaian bunga elegan untuk merayakan momen wisuda yang berkesan.',
-                'image' => 'categories/graduation.jpg',
             ],
             [
                 'name' => 'Bunga Anniversary',
                 'slug' => 'bunga-anniversary',
-                'description' => 'Bunga romantis untuk merayakan hari jadi bersama pasangan tercinta.',
-                'image' => 'categories/anniversary.jpg',
             ],
             [
                 'name' => 'Bunga Duka Cita',
                 'slug' => 'bunga-duka-cita',
-                'description' => 'Rangkaian bunga untuk menyampaikan belasungkawa dan simpati.',
-                'image' => 'categories/sympathy.jpg',
             ],
         ];
 
