@@ -4,6 +4,7 @@ namespace App\Livewire\Admin;
 
 use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -20,10 +21,11 @@ class ProductManager extends Component
     public $description;
     public $badge = 'none';
     public $is_featured = false;
-    
+
     // Simplification for this demo: handling a single image upload instead of array to save time
-    public $image; 
-    
+    public $image;
+    public $imagePath;
+
     public $productId;
     public $isEditing = false;
     public $showModal = false;
@@ -45,7 +47,7 @@ class ProductManager extends Component
             'description' => 'required|string',
             'badge' => 'nullable|in:none,new,best_seller',
             'is_featured' => 'boolean',
-            'image' => 'nullable|image|max:2048', // Allow null for edit
+            'image' => ($this->isEditing ? 'nullable' : 'required') . '|image|max:2048',
         ];
     }
 
@@ -60,7 +62,7 @@ class ProductManager extends Component
     {
         $this->resetValidation();
         $product = Product::findOrFail($id);
-        
+
         $this->productId = $product->id;
         $this->name = $product->name;
         $this->category_id = $product->category_id;
@@ -69,9 +71,10 @@ class ProductManager extends Component
         $this->description = $product->description;
         $this->badge = $product->badge ?: 'none';
         $this->is_featured = $product->is_featured;
-        
-        $this->image = null; 
-        
+
+        $this->image = null;
+        $this->imagePath = $product->image;
+
         $this->isEditing = true;
         $this->showModal = true;
     }
@@ -91,26 +94,21 @@ class ProductManager extends Component
             'is_featured' => $this->is_featured,
         ];
 
-        // Hack for demo: we store string image path in the JSON column
-        $imagesArray = [];
         if ($this->image) {
-            $path = $this->image->store('products', 'public');
-            $imagesArray = [$path];
-            $data['images'] = $imagesArray;
+            $data['image'] = $this->image->store('products', 'public');
         }
 
         if ($this->isEditing) {
-            // Only update images if a new one was uploaded
-            if (empty($imagesArray)) {
-                unset($data['images']);
+            if ($this->image) {
+                if ($this->imagePath && Storage::disk('public')->exists($this->imagePath)) {
+                    Storage::disk('public')->delete($this->imagePath);
+                }
+            } else {
+                $data['image'] = $this->imagePath;
             }
             Product::findOrFail($this->productId)->update($data);
             $msg = 'Produk berhasil diperbarui.';
         } else {
-            // Use dummy images array if none provided
-            if (empty($imagesArray)) {
-                $data['images'] = ['dummy.jpg'];
-            }
             Product::create($data);
             $msg = 'Produk baru berhasil ditambahkan.';
         }
@@ -121,14 +119,18 @@ class ProductManager extends Component
 
     public function confirmDelete($id)
     {
-        Product::findOrFail($id)->delete();
+        $product = Product::findOrFail($id);
+        if ($product->image && Storage::disk('public')->exists($product->image)) {
+            Storage::disk('public')->delete($product->image);
+        }
+        $product->delete();
         $this->dispatch('toast', ['type' => 'success', 'message' => 'Produk berhasil dihapus.']);
     }
 
     public function render()
     {
         $query = Product::with('category')->latest();
-        
+
         if ($this->search) {
             $query->where('name', 'like', '%' . $this->search . '%');
         }

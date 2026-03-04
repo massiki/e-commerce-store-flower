@@ -13,10 +13,7 @@ class CategoryManager extends Component
     use WithPagination, WithFileUploads;
 
     public $name;
-    public $description;
-    public $image; // file upload
-    public $imagePath; // for displaying existing image
-    
+
     public $categoryId;
     public $isEditing = false;
     public $showModal = false;
@@ -25,14 +22,12 @@ class CategoryManager extends Component
     {
         return [
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'image' => 'nullable|image|max:2048', // 2MB Max
         ];
     }
 
     public function confirmCreate()
     {
-        $this->reset(['name', 'description', 'image', 'imagePath', 'categoryId']);
+        $this->reset(['name', 'categoryId']);
         $this->isEditing = false;
         $this->showModal = true;
     }
@@ -41,12 +36,9 @@ class CategoryManager extends Component
     {
         $this->resetValidation();
         $category = Category::findOrFail($id);
-        
+
         $this->categoryId = $category->id;
         $this->name = $category->name;
-        $this->description = $category->description;
-        $this->imagePath = $category->image;
-        $this->image = null; // reset new file upload
 
         $this->isEditing = true;
         $this->showModal = true;
@@ -59,12 +51,7 @@ class CategoryManager extends Component
         $data = [
             'name' => $this->name,
             'slug' => Str::slug($this->name),
-            'description' => $this->description,
         ];
-
-        if ($this->image) {
-            $data['image'] = $this->image->store('categories', 'public');
-        }
 
         if ($this->isEditing) {
             Category::findOrFail($this->categoryId)->update($data);
