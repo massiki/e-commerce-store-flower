@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin;
 
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -68,6 +69,10 @@ class CategoryManager extends Component
     public function confirmDelete($id)
     {
         // Simple delete for now. In real app, check if it has products first.
+        if (Product::where('category_id', $id)->exists()) {
+            $this->dispatch('toast', ['type' => 'error', 'message' => 'Kategori tidak dapat dihapus karena masih ada produk yang terkait.']);
+            return;
+        }
         Category::findOrFail($id)->delete();
         $this->dispatch('toast', ['type' => 'success', 'message' => 'Kategori berhasil dihapus.']);
     }
